@@ -85,7 +85,7 @@ public class MailService {
 
             //create the folder object and open it
             Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
+            emailFolder.open(Folder.READ_WRITE);
 
             // retrieve the messages from the folder in an array and print it
             Message[] messages = emailFolder.getMessages();
@@ -115,6 +115,39 @@ public class MailService {
             e.printStackTrace();
         }
     }
+
+    public void showMessages() throws MessagingException {
+        Folder folder = null;
+        Store store = null;
+        try {
+            Properties props = System.getProperties();
+            props.setProperty("mail.store.protocol", "imaps");
+
+            Session session = Session.getDefaultInstance(props, null);
+            store = session.getStore("imaps");
+            store.connect("imap.gmail.com","tedsparrowmd@gmail.com", "NCvbTcJK7w7wxxN");
+            folder = store.getFolder("Inbox");
+
+            folder.open(Folder.READ_WRITE);
+            Message messages[] = folder.getMessages();
+            System.out.println("No of Messages : " + folder.getMessageCount());
+            System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
+            for (int i=0; i < messages.length; ++i) {
+                System.out.println("MESSAGE #" + (i + 1) + ":");
+                Message message = messages[i];
+                System.out.println("Email Number " + (i + 1));
+                System.out.println("Subject: " + message.getSubject());
+                System.out.println("From: " + message.getFrom()[0]);
+                System.out.println("Text: " + readPlainContent((MimeMessage) message));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (folder != null) { folder.close(true); }
+            if (store != null) { store.close(); }
+        }
+    }
+
     String readPlainContent(MimeMessage message) throws Exception {
         return new MimeMessageParser(message).parse().getPlainContent();
     }
