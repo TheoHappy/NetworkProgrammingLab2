@@ -1,5 +1,6 @@
 package com.mkyong.service;
 
+import com.mkyong.model.EmailMessage;
 import com.mkyong.model.Mail;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -65,60 +68,12 @@ public class MailService {
         javaMailSender.send(msg);
     }
 
-    public void check(String host, String storeType, String user,
-                             String password)
-    {
-        try {
 
-            //create properties field
-            Properties properties = new Properties();
-
-            properties.put("mail.pop3.host", host);
-            properties.put("mail.pop3.port", "995");
-            properties.put("mail.pop3.starttls.enable", "true");
-            Session emailSession = Session.getDefaultInstance(properties);
-
-            //create the POP3 store object and connect with the pop server
-            Store store = emailSession.getStore("pop3s");
-
-            store.connect(host, user, password);
-
-            //create the folder object and open it
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_WRITE);
-
-            // retrieve the messages from the folder in an array and print it
-            Message[] messages = emailFolder.getMessages();
-            System.out.println("messages.length---" + messages.length);
-
-            for (int i = 0, n = messages.length; i < n; i++) {
-                Message message = messages[i];
-                System.out.println("---------------------------------");
-                System.out.println("Email Number " + (i + 1));
-                System.out.println("Subject: " + message.getSubject());
-                System.out.println("From: " + message.getFrom()[0]);
-                System.out.println("Text: " + readPlainContent((MimeMessage) message));
-//                System.out.println(message.get);
-//                message.getContent().toString()
-
-            }
-
-            //close the store and folder objects
-            emailFolder.close(false);
-            store.close();
-
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void showMessages() throws MessagingException {
+    public List<EmailMessage> getListOfMessages() throws MessagingException {
         Folder folder = null;
         Store store = null;
+        List<EmailMessage> messageList = new ArrayList<>();
+
         try {
             Properties props = System.getProperties();
             props.setProperty("mail.store.protocol", "imaps");
@@ -133,19 +88,17 @@ public class MailService {
             System.out.println("No of Messages : " + folder.getMessageCount());
             System.out.println("No of Unread Messages : " + folder.getUnreadMessageCount());
             for (int i=0; i < messages.length; ++i) {
-                System.out.println("MESSAGE #" + (i + 1) + ":");
                 Message message = messages[i];
-                System.out.println("Email Number " + (i + 1));
-                System.out.println("Subject: " + message.getSubject());
-                System.out.println("From: " + message.getFrom()[0]);
-                System.out.println("Text: " + readPlainContent((MimeMessage) message));
+                messageList.add(new EmailMessage(i,message.getSubject(),""+message.getFrom()[0],readPlainContent((MimeMessage) message)));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (folder != null) { folder.close(true); }
             if (store != null) { store.close(); }
         }
+        return messageList;
     }
 
     String readPlainContent(MimeMessage message) throws Exception {

@@ -1,6 +1,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <title>Title</title>
 
@@ -59,13 +61,15 @@
         <h1>Send Message</h1>
 
         <label for="subject"><b>Subject</b></label>
+        <br>
         <input type="text" th:field="*{subject}" placeholder="Enter Subject" name="subject" id="subject" required>
-
+        <br>
         <label for="message"><b>Message</b></label>
+        <br>
         <input type="text" th:field="*{message}" placeholder="Enter message" name="message" id="message" required>
-
-        <button id="myBtn" type="submit" class="btn">Submit</button>
-        <button type="button" class="btn cancel">Close</button>
+        <br>
+        <br>
+        <button id="myBtn" type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 <!--    <button id="myBtn">Open Modal</button>-->
