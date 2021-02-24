@@ -84,7 +84,8 @@
         <br>
         <label for="message"><b>Message</b></label>
         <br>
-        <input type="text" th:field="*{message}" placeholder="Enter message" name="message" id="message" required>
+<!--        <input type="text" th:field="*{message}" placeholder="Enter message" name="message" id="message" required>-->
+        <textarea  th:field="*{message}" placeholder="Enter message" name="message" id="message" required></textarea>
         <br>
         <input type="file" id="actual-btn" hidden/>
         <label class="label_file" for="actual-btn">Choose File</label>
