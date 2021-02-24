@@ -52,6 +52,20 @@
         text-decoration: none;
         cursor: pointer;
     }
+    .label_file {
+        background-color: indigo;
+        color: white;
+        padding: 0.5rem;
+        font-family: sans-serif;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        margin-top: 1rem;
+    }
+
+    #file-chosen{
+        margin-left: 0.3rem;
+        font-family: sans-serif;
+    }
     </style>
 
 </head>
@@ -60,6 +74,10 @@
     <form th:method="POST" th:action="@{/}" th:object="${mail}" class="form-container">
         <h1>Send Message</h1>
 
+        <label for="to"><b>To</b></label>
+        <br>
+        <input type="text" th:field="*{to}" placeholder="To" name="to" id="to" required>
+        <br>
         <label for="subject"><b>Subject</b></label>
         <br>
         <input type="text" th:field="*{subject}" placeholder="Enter Subject" name="subject" id="subject" required>
@@ -68,43 +86,55 @@
         <br>
         <input type="text" th:field="*{message}" placeholder="Enter message" name="message" id="message" required>
         <br>
+        <input type="file" id="actual-btn" hidden/>
+        <label class="label_file" for="actual-btn">Choose File</label>
+        <input  value="No file chosen" th:field="*{attachment}" id="file-chosen" readonly>
         <br>
         <button id="myBtn" type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-<!--    <button id="myBtn">Open Modal</button>-->
 
-    <!-- The Modal -->
     <div id="myModal" class="modal">
-
-        <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Succes</p>
         </div>
     </div>
 
+
 </div>
 <a href="/inbox">Open Inbox</a>
 </body>
 <script>
-    // Get the modal
     var modal = document.getElementById("myModal");
-    // Get the button that opens the modal
     var btn = document.getElementById("myBtn");
-    // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks the button, open the modal
     btn.onclick = function() {   modal.style.display = "block"; }
 
-    // When the user clicks on <span> (x), close the modal
     span.onclick = function() {   modal.style.display = "none"; }
 
-    // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
         } }
+</script>
+<script>
+    const actualBtn = document.getElementById('actual-btn');
+
+    const fileChosen = document.getElementById('file-chosen');
+    var fileSize = 0;
+
+    actualBtn.addEventListener('change', function(){
+        // fileChosen.textContent = this.files[0].name
+        fileSize = this.files[0].size/1000000;
+        console.log(fileSize)
+        if (fileSize > 2){
+            alert('File-ul introdus depaseste dimensiunea de 2MB')
+        }else {
+            fileChosen.value = this.files[0].name;
+        }
+    })
+
 </script>
 </html>

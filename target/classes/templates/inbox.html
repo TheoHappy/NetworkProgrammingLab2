@@ -10,7 +10,6 @@
 <br>
     <div class="list-group" th:each="email : ${messageList}">
         <a th:href="@{/inbox/message/{id}(id=${email.id})}" class="list-group-item list-group-item-action">
-            <p th:text="${email.id}"/>
             <p th:text="${email.subject}"/>
             <p th:text="${email.sender}"/>
         </a>
